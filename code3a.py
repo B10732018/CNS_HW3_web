@@ -4,6 +4,7 @@ import os
 import time
 import base64
 from urllib.parse import urlparse, parse_qs
+import jwt
 
 # Get port number from the PORT environment varaible or 3000 if not specified
 port = int(os.getenv('PORT', 3000))
@@ -100,7 +101,26 @@ class MyServer(BaseHTTPRequestHandler):
 
                 self.end_headers()
                 self.wfile.write(bytes("ok", 'utf-8'))
-
+        elif self.path == '/jwt':
+            req_datas = b'https://cnshw3.adaptable.app/jwt?' + self.rfile.read(int(self.headers['content-length']))
+            post_data=parse_qs(urlparse(req_datas).query)
+            if b'username' not in post_data or b'password' not in post_data:
+                self.send_response(401)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(bytes("failed", 'utf-8'))
+            elif [b'CNS-user'] != post_data[b'username'] or [b'CNS-password'] != post_data[b'password']:
+                self.send_response(401)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(bytes("failed", 'utf-8'))
+            else:
+                print(req_datas.decode())
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                body_jwt = jwt.encode({"username": "CNS-user", "password": "CNS-password"}, "secret", algorithm="HS256")
+                self.wfile.write(bytes(body_jwt, 'utf-8'))
 
         else:
             self.send_response(200)

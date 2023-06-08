@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import time
+import base64
 
 # Get port number from the PORT environment varaible or 3000 if not specified
 port = int(os.getenv('PORT', 3000))
@@ -28,7 +29,7 @@ class MyServer(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(bytes("ok", 'utf-8'))
         else:
-            self.do_AUTHHEAD()
+            self.send_response(401)
             self.wfile.write(bytes("failed", 'utf-8'))
     def do_POST(self):
         if self.headers.get("Authorization") == None:

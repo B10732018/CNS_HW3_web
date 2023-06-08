@@ -20,31 +20,45 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
     def do_GET(self):
-        if self.headers.get("Authorization") == None:
-            self.do_AUTHHEAD()
-            self.wfile.write(bytes("failed", 'utf-8'))
-        elif self.headers.get("Authorization") == "Basic " + self.basic_auth(username, password):
+        if self.path=='/basic':
+            if self.headers.get("Authorization") == None:
+                self.do_AUTHHEAD()
+                self.wfile.write(bytes("failed", 'utf-8'))
+            elif self.headers.get("Authorization") == "Basic " + self.basic_auth(username, password):
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(bytes("ok", 'utf-8'))
+            else:
+                self.send_response(401)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(bytes("failed", 'utf-8'))
+        else:
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
-            self.wfile.write(bytes("ok", 'utf-8'))
-        else:
-            self.send_response(401)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            self.wfile.write(bytes("failed", 'utf-8'))
+            self.wfile.write(bytes("root page", 'utf-8'))
     def do_POST(self):
-        if self.headers.get("Authorization") == None:
-            self.do_AUTHHEAD()
-            self.wfile.write(bytes("failed", 'utf-8'))
-        elif self.headers.get("Authorization") == "Basic " + self.basic_auth(username, password):
+        if self.path == '/basic':
+            if self.headers.get("Authorization") == None:
+                self.do_AUTHHEAD()
+                self.wfile.write(bytes("failed", 'utf-8'))
+            elif self.headers.get("Authorization") == "Basic " + self.basic_auth(username, password):
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(bytes("ok", 'utf-8'))
+            else:
+                self.send_response(401)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(bytes("failed", 'utf-8'))
+        else:
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
-            self.wfile.write(bytes("ok", 'utf-8'))
-        else:
-            self.do_AUTHHEAD()
-            self.wfile.write(bytes("failed", 'utf-8'))
+            self.wfile.write(bytes("root page", 'utf-8'))
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, port), MyServer)

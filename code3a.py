@@ -54,7 +54,32 @@ class MyServer(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 self.wfile.write(bytes("ok", 'utf-8'))
-
+        elif self.path == '/jwt':
+            if self.headers.get("Authorization") == None:
+                self.do_AUTHHEAD()
+                self.wfile.write(bytes("failed", 'utf-8'))
+            else:
+                token = self.headers.get("Authorization")
+                token = token[7:]
+                try:
+                    data = jwt.decode(token, "secret", algorithms=["HS256"])
+                except:
+                    data = {'error': 'error'}
+                if 'username' not in data or 'password' not in data:
+                    self.send_response(401)
+                    self.send_header("Content-type", "text/html")
+                    self.end_headers()
+                    self.wfile.write(bytes("failed", 'utf-8'))
+                elif 'CNS-user' != data['username'] or 'CNS-password' != data['password']:
+                    self.send_response(401)
+                    self.send_header("Content-type", "text/html")
+                    self.end_headers()
+                    self.wfile.write(bytes("failed", 'utf-8'))
+                else:
+                    self.send_response(200)
+                    self.send_header("Content-type", "text/html")
+                    self.end_headers()
+                    self.wfile.write(bytes("ok", 'utf-8'))
         else:
             self.send_response(200)
             self.send_header("Content-type", "text/html")

@@ -12,7 +12,7 @@ password='CNS-password'
 
 class MyServer(BaseHTTPRequestHandler):
     def basic_auth(self, username, password):
-        token = b64encode(f"{username}:{password}".encode('utf-8')).decode("ascii")
+        token = base64.b64encode(f"{username}:{password}".encode('utf-8')).decode("ascii")
         return token
     def do_AUTHHEAD(self):
         self.send_response(401)
@@ -30,6 +30,8 @@ class MyServer(BaseHTTPRequestHandler):
             self.wfile.write(bytes("ok", 'utf-8'))
         else:
             self.send_response(401)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
             self.wfile.write(bytes("failed", 'utf-8'))
     def do_POST(self):
         if self.headers.get("Authorization") == None:

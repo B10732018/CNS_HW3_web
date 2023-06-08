@@ -3,7 +3,7 @@ import os
 import time
 
 # Get port number from the PORT environment varaible or 3000 if not specified
-port = os.getenv('PORT', 3000)
+port = int(os.getenv('PORT', 3000))
 hostName = '0.0.0.0'
 
 class MyServer(BaseHTTPRequestHandler):

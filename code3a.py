@@ -16,7 +16,7 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        self.wfile.write(bytes(MyServer.gusp_msg + b'<br>', 'utf-8'))
+        self.wfile.write(bytes(MyServer.gusp_msg + '<br>', 'utf-8'))
         self.wfile.write(bytes(MyServer.xss_msg, 'utf-8'))
     def do_GET(self):
         if urlparse(self.path).path=='/xss':
@@ -29,7 +29,7 @@ class MyServer(BaseHTTPRequestHandler):
             self.sent_ok()
     def do_POST(self):
         if urlparse(self.path).path=='/gusp':
-            post_data = self.rfile.read(int(self.headers['content-length']))
+            post_data = self.rfile.read(int(self.headers['content-length'])).decode()
 
             if self.headers.get("Content-Type") == 'application/gusp':
                 MyServer.gusp_msg=post_data

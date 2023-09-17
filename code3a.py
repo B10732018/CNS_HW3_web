@@ -32,10 +32,16 @@ class MyServer(BaseHTTPRequestHandler):
             post_data = self.rfile.read(int(self.headers['content-length'])).decode()
 
             if self.headers.get("Content-Type") == 'application/gusp':
-                MyServer.gusp_msg=post_data
-                self.sent_ok()
+                short_id=urlparse(post_data).path
+                success='[gusp]SUCCESS|'+str(len(short_id))+'|'+short_id+'[/gusp]'
+                MyServer.gusp_msg = post_data+' '+success
+
+                self.send_response(200)
+                self.send_header("Content-type", "application/gusp")
+                self.end_headers()
+                self.wfile.write(bytes(success, 'utf-8'))
             else:
-                self.send_response(401)
+                self.send_response(404)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 self.wfile.write(bytes("failed", 'utf-8'))

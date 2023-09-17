@@ -35,7 +35,7 @@ class MyServer(BaseHTTPRequestHandler):
                 MyServer.gusp_msg = post_data
                 short_id=urlparse(post_data[post_data.index('https://'):]).path
                 MyServer.gusp_msg += ' ' + short_id
-                short_id =short_id[:short_id.index('|')]
+                #short_id =short_id[:short_id.index('|')]
                 MyServer.gusp_msg += ' ' + short_id
                 success='[gusp]SUCCESS|'+str(len(short_id))+'|'+short_id+'[/gusp]'
 

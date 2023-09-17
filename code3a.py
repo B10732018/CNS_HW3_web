@@ -9,28 +9,34 @@ from urllib.parse import urlparse, parse_qs
 port = int(os.getenv('PORT', 3000))
 hostName = '0.0.0.0'
 
-gusp_msg='gusp here'
-xss_msg='xss here'
-
-
 class MyServer(BaseHTTPRequestHandler):
+    xss_msg = 'xss here'
+    gusp_msg = 'gusp here'
+
     def do_GET(self):
-        if self.path == '/xss':
+        if urlparse(self.path).path=='/xss':
             query = urlparse(self.path).query
-            xss_msg=query
+            print(query)
+            MyServer.xss_msg=query
+            print(MyServer.xss_msg)
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            self.wfile.write(bytes(MyServer.gusp_msg + '<br>', 'utf-8'))
+            self.wfile.write(bytes(MyServer.xss_msg, 'utf-8'))
         else:
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
-            self.wfile.write(bytes(gusp_msg, 'utf-8'))
-            self.wfile.write(bytes(xss_msg, 'utf-8'))
+            self.wfile.write(bytes(MyServer.gusp_msg+'<br>', 'utf-8'))
+            self.wfile.write(bytes(MyServer.xss_msg, 'utf-8'))
     def do_POST(self):
         if self.path == '/GUSP':
             req_datas = self.rfile.read(int(self.headers['content-length']))
-            post_data = urlparse.parse_qs(field_data)
+            post_data = urlparse.parse_qs(req_datas)
 
             if self.headers.get("Content-Type") == 'application/gusp':
-                gusp_msg=post_data
+                MyServer.gusp_msg=post_data
             else:
                 self.send_response(401)
                 self.send_header("Content-type", "text/html")
@@ -40,8 +46,8 @@ class MyServer(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
-            self.wfile.write(bytes(gusp_msg, 'utf-8'))
-            self.wfile.write(bytes(xss_msg, 'utf-8'))
+            self.wfile.write(bytes(MyServer.gusp_msg, 'utf-8'))
+            self.wfile.write(bytes(MyServer.xss_msg, 'utf-8'))
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, port), MyServer)

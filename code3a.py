@@ -33,7 +33,9 @@ class MyServer(BaseHTTPRequestHandler):
 
             if self.headers.get("Content-Type") == 'application/gusp':
                 short_id=urlparse(post_data).path
+                print(short_id)
                 short_id =short_id[short_id.find('/',9):]
+                print(short_id)
                 success='[gusp]SUCCESS|'+str(len(short_id))+'|'+short_id+'[/gusp]'
                 MyServer.gusp_msg = post_data+' '+success
 
@@ -52,5 +54,4 @@ class MyServer(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, port), MyServer)
     print("Server started http://%s:%s" % (hostName, port))
-
     webServer.serve_forever()

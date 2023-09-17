@@ -36,8 +36,9 @@ class MyServer(BaseHTTPRequestHandler):
                 url=post_data.split('|')[2]
                 short_id=urlparse(url).path
                 short_id =short_id[1:]
-                MyServer.gusp_msg += ' '+short_id
+                MyServer.gusp_msg += '<br>'+short_id
                 success='[gusp]SUCCESS|'+str(len(short_id))+'|'+short_id+'[/gusp]'
+                MyServer.gusp_msg += '<br>' + success
 
 
                 self.send_response(200)

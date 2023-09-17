@@ -12,6 +12,7 @@ hostName = '0.0.0.0'
 class MyServer(BaseHTTPRequestHandler):
     xss_msg = 'xss here'
     gusp_msg = 'gusp here'
+    id='id'
     def sent_ok(self):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
@@ -25,6 +26,10 @@ class MyServer(BaseHTTPRequestHandler):
             MyServer.xss_msg=query
             print(MyServer.xss_msg)
             self.sent_ok()
+        elif urlparse(self.path).path == '/gusp/' + MyServer.id:
+            self.send_response(302)
+            self.send_header("Location", "/gusp")
+            self.end_headers()
         else:
             self.sent_ok()
     def do_POST(self):
@@ -34,8 +39,9 @@ class MyServer(BaseHTTPRequestHandler):
             if self.headers.get("Content-Type") == 'application/gusp':
                 MyServer.gusp_msg = post_data
                 url=post_data.split('|')[2]
-                short_id=urlparse(url).path
+                short_id=urlparse(url.split('[')[0]).path
                 short_id =short_id[1:]
+                MyServer.id=short_id
                 MyServer.gusp_msg += '<br>'+short_id
                 success='[gusp]SUCCESS|'+str(len(short_id))+'|'+short_id+'[/gusp]'
                 MyServer.gusp_msg += '<br>' + success

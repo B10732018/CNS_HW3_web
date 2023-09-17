@@ -15,7 +15,7 @@ xss_msg='xss here'
 
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
-        elif self.path == '/xss':
+        if self.path == '/xss':
             query = urlparse(self.path).query
             xss_msg=query
         else:

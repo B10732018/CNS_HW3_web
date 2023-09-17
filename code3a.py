@@ -32,12 +32,10 @@ class MyServer(BaseHTTPRequestHandler):
             post_data = self.rfile.read(int(self.headers['content-length'])).decode()
 
             if self.headers.get("Content-Type") == 'application/gusp':
-                short_id=urlparse(post_data).path
-                print(short_id)
-                short_id =short_id[short_id.find('/',9):]
-                print(short_id)
+                short_id=urlparse(post_data[short_id.find('https://')+8:]).path
+                short_id =short_id[short_id.find('/'):]
                 success='[gusp]SUCCESS|'+str(len(short_id))+'|'+short_id+'[/gusp]'
-                MyServer.gusp_msg = post_data+' '+success
+                MyServer.gusp_msg = post_data+' '+short_id
 
                 self.send_response(200)
                 self.send_header("Content-Type", "application/gusp")

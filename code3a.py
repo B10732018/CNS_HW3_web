@@ -37,7 +37,7 @@ class MyServer(BaseHTTPRequestHandler):
                 MyServer.gusp_msg = post_data+' '+success
 
                 self.send_response(200)
-                self.send_header("Content-type", "application/gusp")
+                self.send_header("Content-Type", "application/gusp")
                 self.end_headers()
                 self.wfile.write(bytes(success, 'utf-8'))
             else:

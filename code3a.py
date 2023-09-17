@@ -28,9 +28,8 @@ class MyServer(BaseHTTPRequestHandler):
         else:
             self.sent_ok()
     def do_POST(self):
-        if self.path == '/GUSP':
-            req_datas = self.rfile.read(int(self.headers['content-length']))
-            post_data = urlparse.parse_qs(req_datas)
+        if urlparse(self.path).path=='/gusp':
+            post_data = self.rfile.read(int(self.headers['content-length']))
 
             if self.headers.get("Content-Type") == 'application/gusp':
                 MyServer.gusp_msg=post_data

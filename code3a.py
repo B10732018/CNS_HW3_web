@@ -34,9 +34,8 @@ class MyServer(BaseHTTPRequestHandler):
             if self.headers.get("Content-Type") == 'application/gusp':
                 MyServer.gusp_msg = post_data
                 short_id=urlparse(post_data[post_data.index('https://'):]).path
-                MyServer.gusp_msg += ' ' + short_id
-                #short_id =short_id[:short_id.index('|')]
-                MyServer.gusp_msg += ' ' + short_id
+                MyServer.gusp_msg += ' ' + short_id + str(short_id.index('|'))
+                short_id =short_id[:short_id.index('|')]
                 success='[gusp]SUCCESS|'+str(len(short_id))+'|'+short_id+'[/gusp]'
 
 

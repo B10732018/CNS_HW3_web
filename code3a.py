@@ -45,7 +45,7 @@ class MyServer(BaseHTTPRequestHandler):
                 MyServer.gusp_msg = post_data
                 url=post_data.split('|')[2]
                 url=url.split('[')[0]
-                MyServer.gusp_msg += '<br>'+ url
+                MyServer.gusp_msg += '<br>'+ url+' '+len(MyServer.location)
                 if url not in MyServer.location:
                     MyServer.gusp_msg += '<br>new'
                     short_id = str(len(MyServer.location))
@@ -65,7 +65,7 @@ class MyServer(BaseHTTPRequestHandler):
                     self.send_response(200)
                     self.send_header("Content-Type", "application/gusp")
                     self.end_headers()
-                    self.wfile.write(bytes('[gusp]ERROR|5|error', 'utf-8'))
+                    self.wfile.write(bytes('[gusp]ERROR|5|error[/gusp]', 'utf-8'))
             else:
                 self.send_response(404)
                 self.send_header("Content-type", "text/html")

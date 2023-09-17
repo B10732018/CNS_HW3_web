@@ -44,7 +44,7 @@ class MyServer(BaseHTTPRequestHandler):
                 url=post_data.split('|')[2]
                 short_id=urlparse(url.split('[')[0]).path
                 short_id =short_id[1:]
-                if '/gusp/'+short_id in MyServer.id:
+                if '/gusp/'+short_id not in MyServer.id:
                     MyServer.id.append('/gusp/'+short_id)
                     MyServer.gusp_msg += '<br>'+short_id
                     success='[gusp]SUCCESS|'+str(len(short_id))+'|'+short_id+'[/gusp]'

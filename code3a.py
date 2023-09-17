@@ -44,16 +44,21 @@ class MyServer(BaseHTTPRequestHandler):
                 url=post_data.split('|')[2]
                 short_id=urlparse(url.split('[')[0]).path
                 short_id =short_id[1:]
-                MyServer.id=short_id
-                MyServer.gusp_msg += '<br>'+short_id
-                success='[gusp]SUCCESS|'+str(len(short_id))+'|'+short_id+'[/gusp]'
-                MyServer.gusp_msg += '<br>' + success
+                if MyServer.id!=short_id:
+                    MyServer.id=short_id
+                    MyServer.gusp_msg += '<br>'+short_id
+                    success='[gusp]SUCCESS|'+str(len(short_id))+'|'+short_id+'[/gusp]'
+                    MyServer.gusp_msg += '<br>' + success
 
-
-                self.send_response(200)
-                self.send_header("Content-Type", "application/gusp")
-                self.end_headers()
-                self.wfile.write(bytes(success, 'utf-8'))
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/gusp")
+                    self.end_headers()
+                    self.wfile.write(bytes(success, 'utf-8'))
+                else:
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/gusp")
+                    self.end_headers()
+                    self.wfile.write(bytes('[gusp]ERROR|5|error', 'utf-8'))
             else:
                 self.send_response(404)
                 self.send_header("Content-type", "text/html")

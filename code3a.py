@@ -30,6 +30,9 @@ class MyServer(BaseHTTPRequestHandler):
             self.send_response(302)
             self.send_header("Location", "/gusp")
             self.end_headers()
+        elif '/gusp/' in urlparse(self.path).path:
+            self.send_response(404)
+            self.end_headers()
         else:
             self.sent_ok()
     def do_POST(self):

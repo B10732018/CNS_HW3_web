@@ -45,7 +45,7 @@ class MyServer(BaseHTTPRequestHandler):
                 MyServer.gusp_msg = post_data
                 url=post_data.split('|')[2]
                 url=url.split('[')[0]
-                MyServer.gusp_msg += '<br>'+ url+' '+len(MyServer.location)
+                MyServer.gusp_msg += '<br>'+ url+' '+str(len(MyServer.location))
                 if url not in MyServer.location:
                     MyServer.gusp_msg += '<br>new'
                     short_id = str(len(MyServer.location))

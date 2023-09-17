@@ -16,7 +16,7 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        self.wfile.write(bytes(MyServer.gusp_msg + '<br>', 'utf-8'))
+        self.wfile.write(bytes(MyServer.gusp_msg + b'<br>', 'utf-8'))
         self.wfile.write(bytes(MyServer.xss_msg, 'utf-8'))
     def do_GET(self):
         if urlparse(self.path).path=='/xss':

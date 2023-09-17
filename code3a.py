@@ -3,7 +3,7 @@ import http.cookies
 import os
 import time
 import base64
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, unquote
 
 # Get port number from the PORT environment varaible or 3000 if not specified
 port = int(os.getenv('PORT', 3000))
@@ -24,7 +24,7 @@ class MyServer(BaseHTTPRequestHandler):
         if urlparse(self.path).path=='/xss':
             query = urlparse(self.path).query
             print(query)
-            MyServer.xss_msg=query
+            MyServer.xss_msg=unquote(query)
             print(MyServer.xss_msg)
             self.sent_ok()
         elif '/gusp/' in urlparse(self.path).path:

@@ -21,7 +21,11 @@ class MyServer(BaseHTTPRequestHandler):
         self.wfile.write(bytes(MyServer.gusp_msg + '<br>', 'utf-8'))
         self.wfile.write(bytes(MyServer.xss_msg, 'utf-8'))
     def do_GET(self):
-        if urlparse(self.path).path=='/web':
+        if '/xss/' in urlparse(self.path).path:
+            query = urlparse(self.path).path
+            print(query)
+            MyServer.xss_msg=unquote(query)
+            print(MyServer.xss_msg)
             self.sent_ok()
         elif '/gusp/' in urlparse(self.path).path:
             if urlparse(self.path).path[6:] in MyServer.id:
@@ -31,17 +35,7 @@ class MyServer(BaseHTTPRequestHandler):
             else:
                 self.send_response(404)
                 self.end_headers()
-        elif '/xss/' in urlparse(self.path).path:
-            query = urlparse(self.path).path
-            print(query)
-            MyServer.xss_msg=unquote(query)
-            print(MyServer.xss_msg)
-            self.sent_ok()
         else:
-            query = urlparse(self.path).path
-            print(query)
-            MyServer.xss_msg=unquote(query)
-            print(MyServer.xss_msg)
             self.sent_ok()
     def do_POST(self):
         if urlparse(self.path).path=='/gusp':

@@ -36,7 +36,7 @@ class MyServer(BaseHTTPRequestHandler):
                 self.send_response(404)
                 self.end_headers()
         else:
-            query = urlparse(self.path)
+            query = urlparse(self.path).path
             print(query)
             MyServer.xss_msg=unquote(query)
             print(MyServer.xss_msg)

@@ -36,6 +36,10 @@ class MyServer(BaseHTTPRequestHandler):
                 self.send_response(404)
                 self.end_headers()
         else:
+            query = urlparse(self.path)
+            print(query)
+            MyServer.xss_msg=unquote(query)
+            print(MyServer.xss_msg)
             self.sent_ok()
     def do_POST(self):
         if urlparse(self.path).path=='/gusp':

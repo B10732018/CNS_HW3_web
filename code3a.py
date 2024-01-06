@@ -31,6 +31,12 @@ class MyServer(BaseHTTPRequestHandler):
             else:
                 self.send_response(404)
                 self.end_headers()
+        elif '/xss/' in urlparse(self.path).path:
+            query = urlparse(self.path).path
+            print(query)
+            MyServer.xss_msg=unquote(query)
+            print(MyServer.xss_msg)
+            self.sent_ok()
         else:
             query = urlparse(self.path).path
             print(query)
